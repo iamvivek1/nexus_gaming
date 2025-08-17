@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS Gaming Portal - Dashboard</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* Animated background */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: grid-move 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes grid-move {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Header */
+        .header {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid rgba(0, 255, 255, 0.3);
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: #00ffff;
+            text-shadow: 0 0 10px #00ffff;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #00ffff;
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #000;
+            animation: profile-glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes profile-glow {
+            0% { box-shadow: 0 0 10px rgba(0, 255, 255, 0.5); }
+            100% { box-shadow: 0 0 20px rgba(0, 255, 255, 0.8); }
+        }
+
+        .username {
+            font-weight: 600;
+            color: #00ffff;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .welcome-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #00ffff, #0080ff, #004080);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: title-shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes title-shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
+        }
+
+        .welcome-subtitle {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        /* Dashboard Cards */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .dashboard-card {
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dashboard-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .dashboard-card:hover::before {
+            left: 100%;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-10px);
+            border-color: #00ffff;
+            box-shadow: 0 20px 40px rgba(0, 255, 255, 0.2);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, rgba(0, 255, 255, 0.2), rgba(0, 128, 255, 0.2));
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: icon-glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes icon-glow {
+            0% { 
+                box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+                border-color: rgba(0, 255, 255, 0.4);
+            }
+            100% { 
+                box-shadow: 0 0 20px rgba(0, 255, 255, 0.6);
+                border-color: rgba(0, 255, 255, 0.7);
+            }
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #00ffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .card-content {
+            color: #ccc;
+            line-height: 1.6;
+        }
+
+        .card-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #00ffff;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        /* Game Library */
+        .game-library {
+            margin-bottom: 50px;
+        }
+
+        .section-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            color: #00ffff;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 25px;
+        }
+
+        .game-card {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            border-color: #00ffff;
+            box-shadow: 0 15px 30px rgba(0, 255, 255, 0.3);
+        }
+
+        .game-image {
+            height: 140px;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+        }
+
+        .game-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(0, 255, 255, 0.1) 0%, 
+                transparent 50%, 
+                rgba(0, 128, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-card:hover .game-image::before {
+            opacity: 1;
+        }
+
+        .game-placeholder {
+            width: 80px;
+            height: 80px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid rgba(0, 255, 255, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #00ffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .game-info {
+            padding: 15px;
+        }
+
+        .game-title {
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #fff;
+        }
+
+        .game-genre {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .play-button {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(45deg, #00ffff, #0080ff);
+            border: none;
+            border-radius: 5px;
+            color: #000;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .play-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 255, 0.4);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .action-btn {
+            padding: 15px 30px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 2px solid rgba(0, 255, 255, 0.4);
+            border-radius: 25px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .action-btn:hover {
+            border-color: #00ffff;
+            box-shadow: 0 10px 25px rgba(0, 255, 255, 0.3);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .welcome-title {
+                font-size: 2rem;
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="grid-bg"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">NEXUS</div>
+            <ul class="nav-menu">
+                <li><a href="#" onclick="showMessage('Dashboard loaded')">Dashboard</a></li>
+                <li><a href="#" onclick="showMessage('Library opened')">Library</a></li>
+                <li><a href="#" onclick="showMessage('Store opened')">Store</a></li>
+                <li><a href="#" onclick="showMessage('Community opened')">Community</a></li>
+                <li><a href="#" onclick="showMessage('Settings opened')">Settings</a></li>
+            </ul>
+            <div class="user-profile">
+                <div class="user-avatar">P1</div>
+                <span class="username">Player_One</span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h1 class="welcome-title">Welcome Back, Player</h1>
+            <p class="welcome-subtitle">Ready to continue your gaming journey?</p>
+        </section>
+
+        <!-- Dashboard Cards -->
+        <section class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon"></div>
+                    <h3 class="card-title">Gaming Stats</h3>
+                </div>
+                <div class="card-content">
+                    Track your gaming performance and achievements across all platforms.
+                </div>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">142</span>
+                        <span class="stat-label">Games Played</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">89</span>
+                        <span class="stat-label">Achievements</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">347h</span>
+                        <span class="stat-label">Total Time</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon"></div>
+                    <h3 class="card-title">Recent Achievements</h3>
+                </div>
+                <div class="card-content">
+                    You've unlocked 3 new achievements this week! Keep up the excellent work.
+                </div>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">15</span>
+                        <span class="stat-label">This Week</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">89</span>
+                        <span class="stat-label">Total</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">67%</span>
+                        <span class="stat-label">Completion</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-header">
+                    <div class="card-icon"></div>
+                    <h3 class="card-title">Friends Online</h3>
+                </div>
+                <div class="card-content">
+                    See what your friends are playing and join them for multiplayer sessions.
+                </div>
+                <div class="card-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">12</span>
+                        <span class="stat-label">Online Now</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">47</span>
+                        <span class="stat-label">Total Friends</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">5</span>
+                        <span class="stat-label">In Game</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Game Library -->
+        <section class="game-library">
+            <h2 class="section-title">Recently Played</h2>
+            <div class="games-grid">
+                <div class="game-card" onclick="showMessage('Launching Cyber Assault...')">
+                    <div class="game-image">
+                        <div class="game-placeholder">Cyber</div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">Cyber Assault</div>
+                        <div class="game-genre">Action • Sci-Fi</div>
+                        <button class="play-button">Play Now</button>
+                    </div>
+                </div>
+
+                <div class="game-card" onclick="showMessage('Launching Neon Racer...')">
+                    <div class="game-image">
+                        <div class="game-placeholder">Neon</div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">Neon Racer</div>
+                        <div class="game-genre">Racing • Arcade</div>
+                        <button class="play-button">Play Now</button>
+                    </div>
+                </div>
+
+                <div class="game-card" onclick="showMessage('Launching Space Explorer...')">
+                    <div class="game-image">
+                        <div class="game-placeholder">Space</div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">Space Explorer</div>
+                        <div class="game-genre">Adventure • Exploration</div>
+                        <button class="play-button">Play Now</button>
+                    </div>
+                </div>
+
+                <div class="game-card" onclick="showMessage('Launching Battle Arena...')">
+                    <div class="game-image">
+                        <div class="game-placeholder">Battle</div>
+                    </div>
+                    <div class="game-info">
+                        <div class="game-title">Battle Arena</div>
+                        <div class="game-genre">MOBA • Strategy</div>
+                        <button class="play-button">Play Now</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <a href="#" class="action-btn" onclick="showMessage('Browse Store opened')">
+                Browse Store
+            </a>
+            <a href="#" class="action-btn" onclick="showMessage('View Library opened')">
+                View Full Library
+            </a>
+            <a href="#" class="action-btn" onclick="showMessage('Join Tournament opened')">
+                Join Tournament
+            </a>
+            <a href="#" class="action-btn" onclick="showMessage('Community Hub opened')">
+                Community Hub
+            </a>
+        </section>
+    </main>
+
+    <script>
+        // Show message function
+        function showMessage(message) {
+            alert(message);
+        }
+
+        // Add some interactive effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all dashboard cards and game cards
+            document.querySelectorAll('.dashboard-card, .game-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+
+            // Stagger animation for cards
+            document.querySelectorAll('.dashboard-card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+
+            document.querySelectorAll('.game-card').forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 600 + (index * 150));
+            });
+        });
+
+        // Dynamic time greeting
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            const welcomeTitle = document.querySelector('.welcome-title');
+            
+            if (hour < 12) {
+                welcomeTitle.textContent = 'Good Morning, Player';
+            } else if (hour < 18) {
+                welcomeTitle.textContent = 'Good Afternoon, Player';
+            } else {
+                welcomeTitle.textContent = 'Good Evening, Player';
+            }
+        }
+
+        updateGreeting();
+    </script>
+</body>
+</html>

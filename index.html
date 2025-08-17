@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Gaming</title>
+    <style>
+        body { margin: 0; font-family: sans-serif; }
+        #app-content { padding: 20px; }
+    </style>
+</head>
+<body>
+    <div id="app-content"></div>
+
+    <script>
+        const appContent = document.getElementById('app-content');
+
+        async function loadPage(path) {
+            let url;
+            if (path === '/') {
+                url = 'login.html';
+            } else if (path === '/home') {
+                url = 'homepage.html';
+            } else {
+                // Default to login if path is not recognized
+                url = 'login.html';
+            }
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const html = await response.text();
+                appContent.innerHTML = html;
+
+                // Re-execute scripts in the loaded content
+                const scripts = appContent.querySelectorAll('script');
+                scripts.forEach(script => {
+                    const newScript = document.createElement('script');
+                    Array.from(script.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                    newScript.textContent = script.textContent;
+                    script.parentNode.replaceChild(newScript, script);
+                });
+
+            } catch (error) {
+                console.error('Failed to load page:', error);
+                appContent.innerHTML = '<p>Error loading page.</p>';
+            }
+        }
+
+        // Handle initial load
+        loadPage(window.location.pathname);
+
+        // Handle back/forward button
+        window.addEventListener('popstate', () => {
+            loadPage(window.location.pathname);
+        });
+
+        // Intercept link clicks for SPA navigation
+        document.addEventListener('click', (event) => {
+            const { target } = event;
+            if (target.matches('a') && target.getAttribute('href').startsWith('/')) {
+                event.preventDefault();
+                const path = target.getAttribute('href');
+                history.pushState({}, '', path);
+                loadPage(path);
+            }
+        });
+    </script>
+</body>
+</html>
