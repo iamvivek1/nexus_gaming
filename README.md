@@ -13,6 +13,6 @@ You will initially see the login page. After clicking the "Initialize Connection
 
 ## Showcase
 
-![Screenshot 1](screenshot/Screenshot _176.png)
-![Screenshot 2](screenshot/Screenshot _177.png)
-![Screenshot 3](screenshot/Screenshot_178.png)
+| Screenshot 1 | Screenshot 2 | Screenshot 3 |
+|--------------|--------------|--------------|
+| <img src="screenshot/Screenshot _176.png" width="250"> | <img src="screenshot/Screenshot _177.png" width="250"> | <img src="screenshot/Screenshot_178.png" width="250"> |
