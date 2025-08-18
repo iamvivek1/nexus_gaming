@@ -13,6 +13,6 @@ You will initially see the login page. After clicking the "Initialize Connection
 
 ## Showcase
 
-![Screenshot 1](screenshot/Screenshot (176).png)
-![Screenshot 2](screenshot/Screenshot (177).png)
-![Screenshot 3](screenshot/screenshot_178.png)
+![Screenshot 1](screenshot/Screenshot _176.png)
+![Screenshot 2](screenshot/Screenshot _177.png)
+![Screenshot 3](screenshot/Screenshot_178.png)
